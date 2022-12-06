@@ -2,10 +2,10 @@
 This web api was prepared with CQRS design patern. The main purpose is using dapper in dotnet web api project.  
 
 ## What is CQRS
-This will prepare.
+This will be prepared.
 
 ## Why Dapper
-This will prepare.
+This will be prepared.
 
 ## DB Script  
 You can find creating db script in STATICS file.
