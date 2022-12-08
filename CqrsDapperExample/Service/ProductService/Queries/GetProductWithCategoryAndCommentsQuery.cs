@@ -3,7 +3,7 @@ using MediatR;
 
 namespace CqrsDapperExample.Service.ProductService.Queries
 {
-    public class GetProductWithCategoryAndCommentsQuery:IRequest<List<ProductDto>>
+    public class GetProductWithCategoryAndCommentsQuery:IRequest<CustomResponseModel>
     {
         public int Id { get; set; }
 

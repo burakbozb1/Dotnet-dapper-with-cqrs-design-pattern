@@ -39,15 +39,13 @@ namespace CqrsDapperExample.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCategory(int id)
         {
-            await mediatr.Send(new DeleteCategoryCommand(id));
-            return Ok();
+            return Ok(await mediatr.Send(new DeleteCategoryCommand(id)));
         }
 
         [HttpPut]
         public async Task<IActionResult> UpdateCategory(Category category)
         {
-            await mediatr.Send(new UpdateCategoryCommand(category));
-            return Ok();
+            return Ok(await mediatr.Send(new UpdateCategoryCommand(category)));
         }
 
 

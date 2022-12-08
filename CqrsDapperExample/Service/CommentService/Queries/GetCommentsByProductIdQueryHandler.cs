@@ -1,24 +1,26 @@
 ﻿using CqrsDapperExample.Entities;
+using CqrsDapperExample.Models;
 using Dapper;
 using MediatR;
 using Microsoft.Data.SqlClient;
 
 namespace CqrsDapperExample.Service.CommentService.Queries
 {
-    public class GetCommentsByProductIdQueryHandler : IRequestHandler<GetCommentsByProductIdQuery, List<Comment>>
+    public class GetCommentsByProductIdQueryHandler : IRequestHandler<GetCommentsByProductIdQuery, CustomResponseModel>
     {
         private readonly string connectionString = ConnectionStrings.defaultConnection;
-        public async Task<List<Comment>> Handle(GetCommentsByProductIdQuery request, CancellationToken cancellationToken)
+        public async Task<CustomResponseModel> Handle(GetCommentsByProductIdQuery request, CancellationToken cancellationToken)
         {
+            CustomResponseModel responseModel = new CustomResponseModel();
             List<Comment> comments = new List<Comment>();
             string query = $"SELECT * FROM [CqrsDapperExample].[dbo].[Comment] Where ProductId = @ProductId";
             using (SqlConnection con = new SqlConnection(connectionString))
             {
-                con.Open();
-                comments = con.QueryAsync<Comment>(query, new { ProductId = request.ProductId }).Result.ToList();
-                con.Close();
+                var result = await con.QueryAsync<Comment>(query, new { ProductId = request.ProductId });
+                comments = result.ToList();
+                responseModel.Success(200, comments);
             };
-            return comments;
+            return responseModel;
         }
     }
 }

@@ -1,8 +1,9 @@
-﻿using MediatR;
+﻿using CqrsDapperExample.Models;
+using MediatR;
 
 namespace CqrsDapperExample.Service.ProductService.Commands
 {
-    public class DeleteProductCommand:IRequest<bool>
+    public class DeleteProductCommand:IRequest<CustomResponseModel>
     {
         public int Id { get; set; }
 

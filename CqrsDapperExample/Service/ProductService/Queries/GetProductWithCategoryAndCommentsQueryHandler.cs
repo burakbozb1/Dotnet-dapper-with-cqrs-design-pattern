@@ -6,12 +6,13 @@ using Microsoft.Data.SqlClient;
 
 namespace CqrsDapperExample.Service.ProductService.Queries
 {
-    public class GetProductWithCategoryAndCommentsQueryHandler : IRequestHandler<GetProductWithCategoryAndCommentsQuery, List<ProductDto>>
+    public class GetProductWithCategoryAndCommentsQueryHandler : IRequestHandler<GetProductWithCategoryAndCommentsQuery, CustomResponseModel>
     {
         private readonly string connectionString = ConnectionStrings.defaultConnection;
 
-        public async Task<List<ProductDto>> Handle(GetProductWithCategoryAndCommentsQuery request, CancellationToken cancellationToken)
+        public async Task<CustomResponseModel> Handle(GetProductWithCategoryAndCommentsQuery request, CancellationToken cancellationToken)
         {
+            CustomResponseModel responseModel = new CustomResponseModel();
             List<ProductDto> products = new List<ProductDto>();
             string query = @"Select 
                       p.Id as Id,
@@ -26,16 +27,15 @@ namespace CqrsDapperExample.Service.ProductService.Queries
                   Where p.Id=@Id";
             using (SqlConnection con = new SqlConnection(connectionString))
             {
-                con.Open();
                 { 
                     dynamic data = await con.QueryAsync<dynamic>(query, new {Id = request.Id});
                     Slapper.AutoMapper.Configuration.AddIdentifiers(typeof(ProductDto), new List<string> { "Id" });
                     Slapper.AutoMapper.Configuration.AddIdentifiers(typeof(CommentDto), new List<string> { "CommentId" });
                     products = (Slapper.AutoMapper.MapDynamic<ProductDto>(data) as IEnumerable<ProductDto>).ToList();
+                    responseModel.Success(200, products);
                 }
-                con.Close();
             };
-            return products;
+            return responseModel;
         }
     }
 }
